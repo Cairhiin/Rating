@@ -15,8 +15,8 @@ import javafx.scene.control.MenuItem;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 import rating.domain.Discography;
-import rating.ui.AddAlbumLayout;
-import rating.ui.AddBandLayout;
+import rating.ui.AddAlbumView;
+import rating.ui.AddBandView;
 
 /**
  *
@@ -27,8 +27,8 @@ public class Rating extends Application {
     @Override
     public void start(Stage window) {
         Discography discography = new Discography();
-        AddBandLayout addBandLayout = new AddBandLayout(discography);
-        AddAlbumLayout addAlbumLayout = new AddAlbumLayout(discography);
+        AddBandView addBandLayout = new AddBandView(discography);
+        AddAlbumView addAlbumLayout = new AddAlbumView(discography);
         
         BorderPane layout = new BorderPane();
         MenuBar menubar = new MenuBar();
@@ -57,6 +57,7 @@ public class Rating extends Application {
         });
         
         Scene scene = new Scene(layout);
+        scene.getStylesheets().add(getClass().getResource("/rating/ui/RatingStyleSheet.css").toExternalForm());
         window.setScene(scene);
         window.show();
     }

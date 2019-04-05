@@ -21,24 +21,26 @@ import rating.domain.Discography;
  *
  * @author Blackstorm
  */
-public class AddBandLayout {
+public class AddBandView {
     
     private final Discography discography;
     
-    public AddBandLayout(Discography discography) {
+    public AddBandView(Discography discography) {
         this.discography = discography;
     }
     
     public Parent getLayout() {
-        GridPane addBand = new GridPane();
-        addBand.setPadding(new Insets(20, 20, 20, 20));
-        addBand.setVgap(10);
-        addBand.setHgap(10);
+        GridPane addBandView = new GridPane();
+        addBandView.setPadding(new Insets(20, 20, 20, 20));
+        addBandView.setVgap(10);
+        addBandView.setHgap(10);
         
         Label name = new Label("Band name");
+        name.setMinWidth(75);
+        
         Label genre = new Label("Genres");
         Label actionMsg = new Label("");
-        name.setMinWidth(75);
+        actionMsg.getStyleClass().add("error");
         
         TextField nameText = new TextField();
         nameText.setMinWidth(300);
@@ -47,13 +49,13 @@ public class AddBandLayout {
         Button submit = new Button("Submit");
         Button reset = new Button("Clear");
         
-        addBand.add(name, 0, 0);
-        addBand.add(genre, 0, 1);
-        addBand.add(nameText, 1, 0, 2, 1);
-        addBand.add(genreText, 1, 1, 2, 1);
-        addBand.add(submit, 1, 2);
-        addBand.add(reset, 2, 2);
-        addBand.add(actionMsg, 0, 3, 3, 1);
+        addBandView.add(name, 0, 0);
+        addBandView.add(genre, 0, 1);
+        addBandView.add(nameText, 1, 0, 2, 1);
+        addBandView.add(genreText, 1, 1, 2, 1);
+        addBandView.add(submit, 1, 2);
+        addBandView.add(reset, 2, 2);
+        addBandView.add(actionMsg, 0, 3, 3, 1);
         
         reset.setOnAction((e) -> {
            nameText.setText("");
@@ -89,8 +91,10 @@ public class AddBandLayout {
             
             // Check if band exists - same band names can be used but must have different genres
             if (discography.addBand(band)) {
+                actionMsg.getStyleClass().add("success");
                 actionMsg.setText("Band successfully added!");
             } else {
+                actionMsg.getStyleClass().add("error");
                 actionMsg.setText("Band was already in the list!");
             }
             
@@ -100,6 +104,6 @@ public class AddBandLayout {
             System.out.println(discography.getBands());
         });
         
-        return addBand;
+        return addBandView;
     }
 }
