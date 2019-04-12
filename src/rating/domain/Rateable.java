@@ -10,6 +10,5 @@ package rating.domain;
  * @author Blackstorm
  */
 public interface Rateable {
-    public void rate(int rating, String description);
-    public int calculateRating();
+    public void rate(double rating);
 }

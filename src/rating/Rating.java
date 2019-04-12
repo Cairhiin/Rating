@@ -5,16 +5,23 @@
  */
 package rating;
 
+import java.io.File;
+import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.application.Application;
 import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.scene.Scene;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
 import javafx.scene.layout.BorderPane;
+import javafx.stage.FileChooser;
+import javafx.stage.FileChooser.ExtensionFilter;
 import javafx.stage.Stage;
 import rating.domain.Discography;
+import rating.io.LoadData;
+import rating.io.SaveData;
 import rating.ui.AddAlbumView;
 import rating.ui.AddBandView;
 
@@ -24,11 +31,15 @@ import rating.ui.AddBandView;
  */
 public class Rating extends Application {
 
+    private Discography discography;
+    private AddBandView addBandLayout;
+    private AddAlbumView addAlbumLayout;
+    
     @Override
-    public void start(Stage window) {
-        Discography discography = new Discography();
-        AddBandView addBandLayout = new AddBandView(discography);
-        AddAlbumView addAlbumLayout = new AddAlbumView(discography);
+    public void start(Stage window) throws IOException {
+        this.discography = new Discography();
+        this.addBandLayout = new AddBandView(this.discography);
+        this.addAlbumLayout = new AddAlbumView(this.discography);
         
         BorderPane layout = new BorderPane();
         MenuBar menubar = new MenuBar();
@@ -48,6 +59,45 @@ public class Rating extends Application {
         MenuItem addAlbum = new MenuItem("Add New Album");
         discoMenu.getItems().addAll(addBand, addAlbum);
         
+        fileLoad.setOnAction((e) -> {
+          LoadData load;
+          FileChooser fileChooser = new FileChooser();
+          fileChooser.setTitle("Select Discography file");
+          fileChooser.getExtensionFilters().add(
+            new ExtensionFilter("Text Files", "*.txt"));
+            File selectedFile = fileChooser.showOpenDialog(window);
+            if(selectedFile == null) {
+                load = new LoadData();
+            } else {
+                load = new LoadData(selectedFile);
+              try {
+                  load.LoadDiscographyData();
+              } catch (IOException ex) {
+                  Logger.getLogger(Rating.class.getName()).log(Level.SEVERE, null, ex);
+              }
+            }
+            
+            discography = load.getDiscography();
+            addBandLayout = new AddBandView(this.discography);
+            addAlbumLayout = new AddAlbumView(this.discography);
+        });
+        
+        fileSave.setOnAction((ActionEvent e) -> {
+          FileChooser fileChooser = new FileChooser();
+          fileChooser.setTitle("Save Discography file");
+          fileChooser.getExtensionFilters().add(
+            new ExtensionFilter("Text Files", "*.txt"));
+            File selectedFile = fileChooser.showSaveDialog(window);
+            if(selectedFile != null) {
+                SaveData save = new SaveData(discography, selectedFile);
+              try {
+                  save.SaveDiscographyData();
+              } catch (IOException ex) {
+                  Logger.getLogger(Rating.class.getName()).log(Level.SEVERE, null, ex);
+              }
+            }
+        });
+        
         addAlbum.setOnAction((e) -> {
             layout.setCenter(addAlbumLayout.getLayout());
         });
@@ -62,7 +112,7 @@ public class Rating extends Application {
         window.show();
     }
     
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
         launch(Rating.class);
     }
     

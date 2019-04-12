@@ -5,7 +5,6 @@
  */
 package rating.domain;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -15,12 +14,11 @@ import java.util.Objects;
  */
 public class Band implements Rateable {
     private String name;
-    private List<Rating> ratings;
+    private double rating;
     private List<String> genres;
     private String description;
     
     public Band(String name, List<String> genres, String description) {
-        this.ratings = new ArrayList<>();
         this.name = name;
         this.genres = genres;
         this.description = description;
@@ -64,8 +62,8 @@ public class Band implements Rateable {
     }
     
     @Override
-    public void rate(int rating, String description) {
-        this.ratings.add(new Rating(rating, description));
+    public void rate(double rating) {
+        this.rating = rating;
     }
 
     public String getName() {
@@ -74,18 +72,13 @@ public class Band implements Rateable {
     
     public void addGenre(String genre) {
         this.genres.add(genre);
-    }
-    
-    @Override
-    public int calculateRating() {
-        int sum = ratings.stream()
-                .mapToInt(x -> x.getRating())
-                .reduce(0, (x, y) -> x + y);
-    
-        return Math.round(sum / ratings.size());
+    }    
+
+    public double getRating() {
+        return rating;
     }
 
-    public List<String> getGenre() {
+    public List<String> getGenres() {
         return genres;
     }
 

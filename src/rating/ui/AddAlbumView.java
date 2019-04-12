@@ -14,6 +14,7 @@ import javafx.scene.Parent;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
+import javafx.scene.control.Slider;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
 import rating.domain.Album;
@@ -33,9 +34,7 @@ public class AddAlbumView  {
     
     public Parent getLayout() {
         GridPane addAlbumView = new GridPane();
-        addAlbumView.setPadding(new Insets(20, 20, 20, 20));
-        addAlbumView.setVgap(10);
-        addAlbumView.setHgap(10);
+        addAlbumView.setId("main");
         
         Label title = new Label("Album Title");
         title.setMinWidth(75);
@@ -45,10 +44,10 @@ public class AddAlbumView  {
         actionMsg.getStyleClass().add("error");
         
         TextField titleText = new TextField();
-        titleText.setMinWidth(300);
+        titleText.getStyleClass().add("input-field");
         
         ComboBox<Band> bands = new ComboBox<>();
-        bands.setMinWidth(300);
+        bands.getStyleClass().add("input-field");
         Set<Band> bandSet = this.discography.getBands();
         ArrayList<Band> bandList = new ArrayList<>();
         
@@ -57,6 +56,10 @@ public class AddAlbumView  {
         Collections.sort(bandList, Comparator.comparing(Band::getName));
         bands.getItems().addAll(bandList);
         
+        Label ratingLabel = new Label("Rating");
+        Slider rating = new Slider(0, 5, 0);
+        rating.getStyleClass().add("rating-slider");
+        
         Button submit = new Button("Submit");
         Button reset = new Button("Clear");
         
@@ -64,6 +67,7 @@ public class AddAlbumView  {
             
             String albumTitle = titleText.getText().trim();
             Band newBand = bands.getSelectionModel().getSelectedItem();
+            double albumRating = rating.getValue();
             
             // Form validation
             if (albumTitle.equals("")) {
@@ -77,7 +81,12 @@ public class AddAlbumView  {
             }
                    
             // Creating the new Album and adding it to the Discography
-            Album newAlbum = new Album(albumTitle, newBand);
+            Album newAlbum;
+            if (albumRating != 0) {
+                newAlbum = new Album(albumTitle, newBand, albumRating);
+            } else {
+                newAlbum = new Album(albumTitle, newBand);
+            }
             discography.addAlbum(newAlbum, newBand);
             actionMsg.getStyleClass().add("success");
             actionMsg.setText("Album successfully added!");
@@ -99,9 +108,11 @@ public class AddAlbumView  {
         addAlbumView.add(titleText, 1, 0, 2, 1);
         addAlbumView.add(band, 0, 1);
         addAlbumView.add(bands, 1, 1, 2, 1);
-        addAlbumView.add(submit, 1, 2);
-        addAlbumView.add(reset, 2, 2);
-        addAlbumView.add(actionMsg, 0, 3, 3, 1);
+        addAlbumView.add(ratingLabel, 0, 2);
+        addAlbumView.add(rating, 1, 2, 2, 1);
+        addAlbumView.add(submit, 1, 3);
+        addAlbumView.add(reset, 2, 3);
+        addAlbumView.add(actionMsg, 0, 4, 3, 1);
         
         return addAlbumView;
     }

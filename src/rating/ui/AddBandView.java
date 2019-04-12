@@ -31,21 +31,19 @@ public class AddBandView {
     
     public Parent getLayout() {
         GridPane addBandView = new GridPane();
-        addBandView.setPadding(new Insets(20, 20, 20, 20));
-        addBandView.setVgap(10);
-        addBandView.setHgap(10);
+        addBandView.setId("main");
         
         Label name = new Label("Band name");
-        name.setMinWidth(75);
+        name.getStyleClass().add("label");
         
         Label genre = new Label("Genres");
         Label actionMsg = new Label("");
         actionMsg.getStyleClass().add("error");
         
         TextField nameText = new TextField();
-        nameText.setMinWidth(300);
+        nameText.getStyleClass().add("input-field");
         TextField genreText = new TextField();
-        genreText.setMinWidth(300);
+        genreText.getStyleClass().add("input-field");
         Button submit = new Button("Submit");
         Button reset = new Button("Clear");
         
@@ -87,7 +85,7 @@ public class AddBandView {
             }
             
             // Create the band and add it to the discography
-            Band band = new Band(bandname, genreList);
+            Band band = new Band(bandname, genreList);           
             
             // Check if band exists - same band names can be used but must have different genres
             if (discography.addBand(band)) {
