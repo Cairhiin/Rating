@@ -78,8 +78,8 @@ public class Rating extends Application {
             }
             
             discography = load.getDiscography();
-            addBandLayout = new AddBandView(this.discography);
-            addAlbumLayout = new AddAlbumView(this.discography);
+            addBandLayout.setDiscography(discography);
+            addAlbumLayout.setDiscography(discography);
         });
         
         fileSave.setOnAction((ActionEvent e) -> {

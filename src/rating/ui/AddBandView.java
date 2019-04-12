@@ -23,7 +23,7 @@ import rating.domain.Discography;
  */
 public class AddBandView {
     
-    private final Discography discography;
+    private Discography discography;
     
     public AddBandView(Discography discography) {
         this.discography = discography;
@@ -104,4 +104,10 @@ public class AddBandView {
         
         return addBandView;
     }
+
+    public void setDiscography(Discography discography) {
+        this.discography = discography;
+    }
+    
+    
 }

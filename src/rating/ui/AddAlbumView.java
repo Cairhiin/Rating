@@ -26,7 +26,7 @@ import rating.domain.Discography;
  * @author Blackstorm
  */
 public class AddAlbumView  {
-    private final Discography discography;
+    private Discography discography;
     
     public AddAlbumView(Discography discography) {
         this.discography = discography;
@@ -116,4 +116,9 @@ public class AddAlbumView  {
         
         return addAlbumView;
     }
+
+    public void setDiscography(Discography discography) {
+        this.discography = discography;
+    }
+    
 }
