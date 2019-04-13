@@ -7,8 +7,8 @@ package rating.domain;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 /**
  *
@@ -21,8 +21,9 @@ public class Discography {
         this.discography = new HashMap<>();
     }
 
-    public Set<Band> getBands() {
-        return this.discography.keySet();
+    public List<Band> getBands() {
+        List<Band> bands = new ArrayList<>(this.discography.keySet());
+        return bands;
     }
     
     public boolean addBand(Band band) {

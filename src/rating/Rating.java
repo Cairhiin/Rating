@@ -10,7 +10,6 @@ import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.application.Application;
-import javafx.event.ActionEvent;
 import javafx.scene.Scene;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
@@ -24,6 +23,7 @@ import rating.io.LoadData;
 import rating.io.SaveData;
 import rating.ui.AddAlbumView;
 import rating.ui.AddBandView;
+import rating.ui.ListBandsView;
 
 /**
  *
@@ -32,78 +32,93 @@ import rating.ui.AddBandView;
 public class Rating extends Application {
 
     private Discography discography;
-    private AddBandView addBandLayout;
-    private AddAlbumView addAlbumLayout;
-    
+    private AddBandView addBandView;
+    private AddAlbumView addAlbumView;
+    private ListBandsView listBandsView;
+    private File file;
+    private Stage window;
+    private FileChooser fileChooser;
+
     @Override
     public void start(Stage window) throws IOException {
+        this.window = window;
         this.discography = new Discography();
-        this.addBandLayout = new AddBandView(this.discography);
-        this.addAlbumLayout = new AddAlbumView(this.discography);
+        this.addBandView = new AddBandView();
+        this.addAlbumView = new AddAlbumView();
+        this.listBandsView = new ListBandsView();
         
+        this.fileChooser = new FileChooser();
+        fileChooser.getExtensionFilters().add(
+                new ExtensionFilter("Text Files", "*.txt"));
+
         BorderPane layout = new BorderPane();
         MenuBar menubar = new MenuBar();
+        menubar.getStyleClass().add("main-menu");
+
         Menu fileMenu = new Menu("File");
+        fileMenu.getStyleClass().add("menu-item");
         Menu discoMenu = new Menu("Discography");
+        discoMenu.getStyleClass().add("menu-item");
         Menu helpMenu = new Menu("Help");
-        
+        helpMenu.getStyleClass().add("menu-item");
+
         menubar.getMenus().addAll(fileMenu, discoMenu, helpMenu);
         layout.setTop(menubar);
-        layout.setCenter(addBandLayout.getLayout());
-        
+        layout.setCenter(addBandView.getLayout());
+
         MenuItem fileLoad = new MenuItem("Load File");
         MenuItem fileSave = new MenuItem("Save");
-        fileMenu.getItems().addAll(fileLoad, fileSave);
-        
+        fileSave.setDisable(true);
+        MenuItem fileSaveAs = new MenuItem("Save As...");
+        MenuItem fileExit = new MenuItem("Exit");
+        fileMenu.getItems().addAll(fileLoad, fileSave, fileSaveAs, fileExit);
+
         MenuItem addBand = new MenuItem("Add New Band");
         MenuItem addAlbum = new MenuItem("Add New Album");
-        discoMenu.getItems().addAll(addBand, addAlbum);
-        
+        MenuItem listBands = new MenuItem("List Bands");
+        listBands.setDisable(true);
+        MenuItem listAlbums = new MenuItem("List Albums");
+        listAlbums.setDisable(true);
+        discoMenu.getItems().addAll(addBand, addAlbum, listBands, listAlbums);
+
         fileLoad.setOnAction((e) -> {
-          LoadData load;
-          FileChooser fileChooser = new FileChooser();
-          fileChooser.setTitle("Select Discography file");
-          fileChooser.getExtensionFilters().add(
-            new ExtensionFilter("Text Files", "*.txt"));
-            File selectedFile = fileChooser.showOpenDialog(window);
-            if(selectedFile == null) {
-                load = new LoadData();
-            } else {
-                load = new LoadData(selectedFile);
-              try {
-                  load.LoadDiscographyData();
-              } catch (IOException ex) {
-                  Logger.getLogger(Rating.class.getName()).log(Level.SEVERE, null, ex);
-              }
-            }
-            
-            discography = load.getDiscography();
-            addBandLayout.setDiscography(discography);
-            addAlbumLayout.setDiscography(discography);
-        });
-        
-        fileSave.setOnAction((ActionEvent e) -> {
-          FileChooser fileChooser = new FileChooser();
-          fileChooser.setTitle("Save Discography file");
-          fileChooser.getExtensionFilters().add(
-            new ExtensionFilter("Text Files", "*.txt"));
-            File selectedFile = fileChooser.showSaveDialog(window);
-            if(selectedFile != null) {
-                SaveData save = new SaveData(discography, selectedFile);
-              try {
-                  save.SaveDiscographyData();
-              } catch (IOException ex) {
-                  Logger.getLogger(Rating.class.getName()).log(Level.SEVERE, null, ex);
-              }
+            if (this.handleLoadEvent()) {
+                fileSave.setDisable(false);
+                listAlbums.setDisable(false);
+                listBands.setDisable(false);
             }
         });
-        
+
+        fileSaveAs.setOnAction((e) -> {
+            this.handleSaveAsEvent();
+        });
+
+        fileSave.setOnAction((e) -> {
+            SaveData save = new SaveData(discography, this.file);
+            try {
+                save.SaveDiscographyData();
+            } catch (IOException ex) {
+                Logger.getLogger(Rating.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        });
+
+        fileExit.setOnAction((e) -> {
+            window.close();
+        });
+
         addAlbum.setOnAction((e) -> {
-            layout.setCenter(addAlbumLayout.getLayout());
+            addAlbumView.setDiscography(discography);
+            layout.setCenter(addAlbumView.getLayout());
         });
-        
+
         addBand.setOnAction((e) -> {
-            layout.setCenter(addBandLayout.getLayout());
+            addBandView.setDiscography(discography);
+            layout.setCenter(addBandView.getLayout());
+        });
+
+        listBands.setOnAction((e) -> {
+            listBandsView.setDiscography(discography);
+            layout.setCenter(listBandsView.getLayout());
         });
         
         Scene scene = new Scene(layout);
@@ -111,9 +126,46 @@ public class Rating extends Application {
         window.setScene(scene);
         window.show();
     }
-    
+
+    private boolean handleLoadEvent() {
+        this.fileChooser.setTitle("Select Discography file");     
+        this.file = fileChooser.showOpenDialog(this.window);
+        if (file != null) {
+            LoadData load = new LoadData(file);
+            try {
+                load.LoadDiscographyData();
+
+                // load the discography and update the views
+                discography = load.getDiscography();
+                return true;
+            } catch (IOException ex) {
+                Logger.getLogger(Rating.class.getName()).log(Level.SEVERE, null, ex);
+                return false;
+            }
+        }
+
+        return false;
+    }
+
+    private boolean handleSaveAsEvent() {
+        this.fileChooser.setTitle("Save Discography file");
+        this.file = fileChooser.showSaveDialog(window);
+        if (file != null) {
+            SaveData save = new SaveData(discography, file);
+            try {
+                save.SaveDiscographyData();
+                return true;
+            } catch (IOException ex) {
+                Logger.getLogger(Rating.class.getName()).log(Level.SEVERE, null, ex);
+                return false;
+            }
+        }
+
+        return false;
+    }
+
     public static void main(String[] args) throws IOException {
         launch(Rating.class);
     }
-    
+
 }

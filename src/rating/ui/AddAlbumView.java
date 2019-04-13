@@ -5,11 +5,9 @@
  */
 package rating.ui;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.Set;
-import javafx.geometry.Insets;
+import java.util.List;
 import javafx.scene.Parent;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
@@ -28,8 +26,8 @@ import rating.domain.Discography;
 public class AddAlbumView  {
     private Discography discography;
     
-    public AddAlbumView(Discography discography) {
-        this.discography = discography;
+    public AddAlbumView() {
+        this.discography = new Discography();
     }
     
     public Parent getLayout() {
@@ -48,11 +46,7 @@ public class AddAlbumView  {
         
         ComboBox<Band> bands = new ComboBox<>();
         bands.getStyleClass().add("input-field");
-        Set<Band> bandSet = this.discography.getBands();
-        ArrayList<Band> bandList = new ArrayList<>();
-        
-        // Convert the set to a list so it can be sorted
-        bandList.addAll(bandSet);
+        List<Band> bandList = this.discography.getBands();
         Collections.sort(bandList, Comparator.comparing(Band::getName));
         bands.getItems().addAll(bandList);
         

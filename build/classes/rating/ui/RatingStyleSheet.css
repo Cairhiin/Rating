@@ -43,3 +43,13 @@ and open the template in the editor.
     -fx-min-width: 300;
 }
 
+.main-menu {
+    
+}
+
+.main-menu .menu-item {
+    -fx-pref-width: 100;
+    -fx-min-width: 100;
+    -fx-max-width: 100;
+}
+

@@ -6,9 +6,6 @@
 package rating.ui;
 
 import java.util.ArrayList;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
-import javafx.geometry.Insets;
 import javafx.scene.Parent;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -25,8 +22,8 @@ public class AddBandView {
     
     private Discography discography;
     
-    public AddBandView(Discography discography) {
-        this.discography = discography;
+    public AddBandView() {
+        this.discography = new Discography();
     }
     
     public Parent getLayout() {
