@@ -5,8 +5,11 @@
  */
 package rating.domain;
 
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 
 /**
  *
@@ -17,11 +20,13 @@ public class Band implements Rateable {
     private double rating;
     private List<String> genres;
     private String description;
+    private Set<Album> albums;
     
     public Band(String name, List<String> genres, String description) {
         this.name = name;
         this.genres = genres;
         this.description = description;
+        this.albums = new HashSet<>();
     }
     
     public Band(String name, List<String> genres) {
@@ -65,7 +70,21 @@ public class Band implements Rateable {
     public void rate(double rating) {
         this.rating = rating;
     }
-
+    
+    public double calculateRating() {
+        return this.albums.stream()
+                .map(album -> album.getRating())
+                .reduce(0.0, (sum, rate) -> sum += rate) / albums.size();
+    }
+    
+    public void addAlbum(Album album) {
+        this.albums.add(album);
+    }
+    
+    public List<Album> getAlbums() {
+        return new ArrayList<>(this.albums);
+    }
+    
     public String getName() {
         return name;
     }
@@ -88,6 +107,7 @@ public class Band implements Rateable {
     
     @Override
     public String toString() {
-        return name;
+        String genreString = "(" + String.join(" | ", this.genres) + ")";
+        return name + " " + genreString + " ";
     }
 }

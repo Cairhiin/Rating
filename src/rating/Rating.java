@@ -107,6 +107,7 @@ public class Rating extends Application {
         });
 
         addAlbum.setOnAction((e) -> {
+            System.out.println(discography.getBands());
             addAlbumView.setDiscography(discography);
             layout.setCenter(addAlbumView.getLayout());
         });

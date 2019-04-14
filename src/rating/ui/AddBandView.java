@@ -23,7 +23,7 @@ public class AddBandView {
     private Discography discography;
     
     public AddBandView() {
-        this.discography = new Discography();
+
     }
     
     public Parent getLayout() {
@@ -96,7 +96,6 @@ public class AddBandView {
             // Clear the form
             nameText.setText("");
             genreText.setText("");
-            System.out.println(discography.getBands());
         });
         
         return addBandView;

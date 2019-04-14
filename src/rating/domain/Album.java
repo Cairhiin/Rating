@@ -13,14 +13,14 @@ import java.util.Objects;
  */
 public class Album implements Rateable {
     private String title;
-    private Band band;
+    private String band;
     private double rating;
     
-    public Album(String title, Band band) {
+    public Album(String title, String band) {
         this(title, band, -1);
     }
     
-    public Album(String title, Band band, double rating) {
+    public Album(String title, String band, double rating) {
         this.rating = rating;
         this.title = title;
         this.band = band;
@@ -39,7 +39,7 @@ public class Album implements Rateable {
         return rating;
     }
 
-    public Band getBand() {
+    public String getBandName() {
         return band;
     }
 

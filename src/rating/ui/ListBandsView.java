@@ -8,7 +8,6 @@ package rating.ui;
 import java.util.List;
 import java.util.stream.Collectors;
 import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.scene.Parent;
 import javafx.scene.control.ListView;
 import rating.domain.Band;
@@ -30,7 +29,7 @@ public class ListBandsView {
         ListView<String> bandsList = new ListView<>();
         List<Band> bands = this.discography.getBands();
         List<String> bandNames = bands.stream()
-                .map(band -> band.getName())
+                .map(band -> band.toString())
                 .sorted()
                 .collect(Collectors.toList());
         bandsList.setItems(FXCollections.observableList(bandNames));

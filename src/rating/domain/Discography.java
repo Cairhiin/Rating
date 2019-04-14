@@ -15,51 +15,38 @@ import java.util.Map;
  * @author Blackstorm
  */
 public class Discography {
-    private final Map<Band, ArrayList<Album>> discography;
-    
+
+    private final Map<Band, String> discography;
+
     public Discography() {
         this.discography = new HashMap<>();
     }
 
-    public List<Band> getBands() {
-        List<Band> bands = new ArrayList<>(this.discography.keySet());
-        return bands;
-    }
-    
     public boolean addBand(Band band) {
         if (checkIfBandAlreadyIsInList(band)) {
             return false;
         }
-        this.discography.put(band, new ArrayList<>());
+        this.discography.put(band, band.getName());
         return true;
     }
     
-    public Map<Band, ArrayList<Album>> getDiscography() {
-        return discography;
+    public List<Band> getBands() {
+        return new ArrayList<>(this.discography.keySet());
     }
     
+    public Map<Band, String> getDiscography() {
+        return this.discography;
+    }
+
     public void addAlbum(Album album, Band band) {
-        ArrayList<Album> albums = new ArrayList<>();
-        if (!checkIfAlbumAlreadyIsInList(album, band)) {
-            
-            if (checkIfBandAlreadyIsInList(band)) {
-                albums = this.discography.get(band);               
-            } 
-            
-            albums.add(album);
-            this.discography.put(band, albums);
-        }
-    }
-    
-    private boolean checkIfAlbumAlreadyIsInList(Album album, Band band) {
+
         if (!checkIfBandAlreadyIsInList(band)) {
-            return false;
+            this.discography.put(band, band.getName());
         }
-        
-        ArrayList<Album> albums = this.discography.get(band);
-        return albums.contains(album);
+
+        band.addAlbum(album);
     }
-    
+
     private boolean checkIfBandAlreadyIsInList(Band band) {
         return this.discography.containsKey(band);
     }

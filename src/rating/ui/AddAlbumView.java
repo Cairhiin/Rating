@@ -27,7 +27,7 @@ public class AddAlbumView  {
     private Discography discography;
     
     public AddAlbumView() {
-        this.discography = new Discography();
+
     }
     
     public Parent getLayout() {
@@ -77,9 +77,9 @@ public class AddAlbumView  {
             // Creating the new Album and adding it to the Discography
             Album newAlbum;
             if (albumRating != 0) {
-                newAlbum = new Album(albumTitle, newBand, albumRating);
+                newAlbum = new Album(albumTitle, newBand.getName(), albumRating);
             } else {
-                newAlbum = new Album(albumTitle, newBand);
+                newAlbum = new Album(albumTitle, newBand.getName());
             }
             discography.addAlbum(newAlbum, newBand);
             actionMsg.getStyleClass().add("success");
@@ -114,5 +114,4 @@ public class AddAlbumView  {
     public void setDiscography(Discography discography) {
         this.discography = discography;
     }
-    
 }

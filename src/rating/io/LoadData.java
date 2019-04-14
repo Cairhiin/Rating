@@ -9,8 +9,10 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Scanner;
+import java.util.Set;
 import rating.domain.Album;
 import rating.domain.Band;
 import rating.domain.Discography;
@@ -22,14 +24,12 @@ import rating.domain.Discography;
 public class LoadData {
 
     private Discography discography;
-    private Band band;
-    private Album album;
-    private List<Band> bands;
+    private Set<Band> bands;
     private File file;
 
     public LoadData(File file) {
         this.file = file;
-        this.bands = new ArrayList<>();
+        this.bands = new HashSet<>();
         this.discography = new Discography();
     }
     
@@ -49,10 +49,9 @@ public class LoadData {
             String genres = parts[3];
             ArrayList<String> genreList = new ArrayList<>(Arrays.asList(genres.split(",")));
             String description = parts[4];
-            // String bandRating = parts[5];
             
-            this.band = new Band(bandname, genreList, description);
-            this.album = new Album(title, band, rating);
+            Band band = new Band(bandname, genreList, description);
+            Album album = new Album(title, band.getName(), rating);
             
             this.discography.addAlbum(album, band);
             this.bands.add(band);
@@ -60,7 +59,7 @@ public class LoadData {
     }
     
     public List<Band> getBandList() {
-        return bands;
+        return new ArrayList<>(bands);
     }
     
     public Discography getDiscography() {

@@ -8,7 +8,7 @@ package rating.io;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import rating.domain.Album;
 import rating.domain.Band;
@@ -22,7 +22,7 @@ public class SaveData {
 
     private Discography discography;
     private File file;
-    private Map<Band, ArrayList<Album>> disco;
+    private Map<Band, String> disco;
 
     public SaveData(Discography discography, File file) {
         this.discography = discography;
@@ -39,7 +39,7 @@ public class SaveData {
         this.disco = discography.getDiscography();
 
         for (Band band : this.disco.keySet()) {
-            ArrayList<Album> albums = this.disco.get(band);
+            List<Album> albums = band.getAlbums();
             albums.stream()
                     .forEach(album -> {
                         StringBuilder data = new StringBuilder();
