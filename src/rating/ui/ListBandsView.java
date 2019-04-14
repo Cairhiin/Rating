@@ -27,9 +27,9 @@ public class ListBandsView {
 
     public Parent getLayout() {
         ListView<String> bandsList = new ListView<>();
-        List<Band> bands = this.discography.getBands();
+        List<Band> bands = this.discography.getBands();  
         List<String> bandNames = bands.stream()
-                .map(band -> band.toString())
+                .map(band -> band.toString() + " " + band.calculateRating())
                 .sorted()
                 .collect(Collectors.toList());
         bandsList.setItems(FXCollections.observableList(bandNames));

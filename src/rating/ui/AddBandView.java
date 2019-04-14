@@ -23,7 +23,7 @@ public class AddBandView {
     private Discography discography;
     
     public AddBandView() {
-
+        
     }
     
     public Parent getLayout() {

@@ -22,7 +22,7 @@ public class SaveData {
 
     private Discography discography;
     private File file;
-    private Map<Band, String> disco;
+    private List<Band> disco;
 
     public SaveData(Discography discography, File file) {
         this.discography = discography;
@@ -38,7 +38,7 @@ public class SaveData {
 
         this.disco = discography.getDiscography();
 
-        for (Band band : this.disco.keySet()) {
+        for (Band band : this.disco) {
             List<Album> albums = band.getAlbums();
             albums.stream()
                     .forEach(album -> {

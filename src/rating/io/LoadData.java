@@ -24,17 +24,11 @@ import rating.domain.Discography;
 public class LoadData {
 
     private Discography discography;
-    private Set<Band> bands;
     private File file;
 
     public LoadData(File file) {
         this.file = file;
-        this.bands = new HashSet<>();
         this.discography = new Discography();
-    }
-    
-    public LoadData() {
-        this(new File("ratingManagerData.txt"));
     }
     
     public void LoadDiscographyData() throws IOException {
@@ -51,15 +45,12 @@ public class LoadData {
             String description = parts[4];
             
             Band band = new Band(bandname, genreList, description);
-            Album album = new Album(title, band.getName(), rating);
-            
+            if (this.discography.addBand(band)) {
+                System.out.println("BAND ADDED: " + band.getName());
+            }
+            Album album = new Album(title, band.getName(), rating);           
             this.discography.addAlbum(album, band);
-            this.bands.add(band);
-        }
-    }
-    
-    public List<Band> getBandList() {
-        return new ArrayList<>(bands);
+        }          
     }
     
     public Discography getDiscography() {

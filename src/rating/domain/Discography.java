@@ -16,38 +16,43 @@ import java.util.Map;
  */
 public class Discography {
 
-    private final Map<Band, String> discography;
+    private final List<Band> discography;
 
     public Discography() {
-        this.discography = new HashMap<>();
+        this.discography = new ArrayList<>();
     }
 
     public boolean addBand(Band band) {
         if (checkIfBandAlreadyIsInList(band)) {
             return false;
         }
-        this.discography.put(band, band.getName());
+        this.discography.add(band);
         return true;
     }
-    
+
     public List<Band> getBands() {
-        return new ArrayList<>(this.discography.keySet());
+        return this.discography;
     }
-    
-    public Map<Band, String> getDiscography() {
+
+    public List<Band> getDiscography() {
         return this.discography;
     }
 
     public void addAlbum(Album album, Band band) {
 
         if (!checkIfBandAlreadyIsInList(band)) {
-            this.discography.put(band, band.getName());
+            band.addAlbum(album);
+            this.discography.add(band);
+        } else {
+            for (Band currentBand : discography) {
+                if (currentBand.equals(band)) {
+                    currentBand.addAlbum(album);
+                }
+            }
         }
-
-        band.addAlbum(album);
     }
 
     private boolean checkIfBandAlreadyIsInList(Band band) {
-        return this.discography.containsKey(band);
+        return this.discography.contains(band);
     }
 }
